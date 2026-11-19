@@ -1,7 +1,7 @@
 [project]
 name = "reasoning-model-from-scratch"
 version = "0.1.0"
-description = "Add your description here"
+description = 'Code following "Build a Reasoning Model (From Scratch)": Qwen3-based generation and MATH-500 evaluation, developed chapter by chapter.'
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

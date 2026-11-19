@@ -222,3 +222,6 @@ __marimo__/
 
 # AI Models
 models/
+
+# Datasets (auto-downloaded on first run)
+data/
