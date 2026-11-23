@@ -14,6 +14,8 @@ def generate_text_stream_concat(
     device: torch.device,
     max_new_tokens: int | None,
     verbose: bool = False,
+    generate_func=generate_text_basic_stream_cache,
+    **generate_kwargs,
 ) -> str:
     # Tokenize the prompt into a batch of input ids
     input_ids = torch.tensor(
@@ -21,12 +23,14 @@ def generate_text_stream_concat(
     ).unsqueeze(0)
 
     generated_ids = []
-    # Greedy decoding with the KV cache from chapter 2
-    for token in generate_text_basic_stream_cache(
+    # Decode with the chosen strategy; extra keyword arguments such as
+    # temperature or top_p are forwarded to the decoding function
+    for token in generate_func(
         model=model,
         token_ids=input_ids,
         max_new_tokens=max_new_tokens,
         eos_token_id=tokenizer.eos_token_id,
+        **generate_kwargs,
     ):
         next_token_id = token.squeeze(0)
         generated_ids.append(next_token_id.item())

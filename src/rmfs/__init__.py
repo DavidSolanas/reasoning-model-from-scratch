@@ -18,14 +18,22 @@ from rmfs.evaluation import (
     sympy_parser,
 )
 from rmfs.generation import (
+    count_samples,
     generate_stats,
     generate_text_basic_stream,
     generate_text_basic_stream_cache,
     generate_text_stream_concat,
+    generate_text_temp_stream_cache,
+    generate_text_top_p_stream_cache,
+    scale_logits_by_temperature,
+    softmax_with_temperature,
+    top_p_filter,
 )
 from rmfs.prompts import render_prompt
+from rmfs.self_consistency import self_consistency_vote
 
 __all__ = [
+    "count_samples",
     "equality_check",
     "evaluate_math500_stream",
     "extract_final_candidate",
@@ -33,11 +41,17 @@ __all__ = [
     "generate_text_basic_stream",
     "generate_text_basic_stream_cache",
     "generate_text_stream_concat",
+    "generate_text_temp_stream_cache",
+    "generate_text_top_p_stream_cache",
     "get_last_boxed",
     "grade_answer",
     "load_math500_test",
     "normalize_text",
     "render_prompt",
+    "scale_logits_by_temperature",
+    "self_consistency_vote",
     "split_into_parts",
+    "softmax_with_temperature",
     "sympy_parser",
+    "top_p_filter",
 ]

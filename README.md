@@ -13,9 +13,15 @@ repository root.
 - **Chapters** (`src/rmfs/chapters/`) — one runnable script per chapter.
   Chapter 2 loads the pretrained Qwen3 0.6B base model, demonstrates single
   next-token prediction, and compares streaming generation without KV cache,
-  with KV cache, and with a compiled model.
-- **Generation** (`src/rmfs/generation/`) — greedy streaming text generation
-  (with and without KV cache) plus token/throughput statistics.
+  with KV cache, and with a compiled model. Chapter 3 builds the
+  answer-grading pipeline and evaluates the model on MATH-500. Chapter 4
+  compares greedy answers with and without a chain-of-thought instruction,
+  adds temperature and top-p sampling, and aggregates sampled answers via
+  self-consistency voting.
+- **Generation** (`src/rmfs/generation/`) — streaming text generation
+  (with and without KV cache): greedy decoding, temperature and top-p
+  sampling, the prompt-to-text helper that ties them together, plus
+  token/throughput statistics.
 - **Prompts** (`src/rmfs/prompts.py`) — chat-style instruction template used
   for the MATH-500 evaluation; asks for the final result as `\boxed{ANSWER}`.
 - **Data** (`src/rmfs/data/`) — loads the MATH-500 test set, downloading it
@@ -24,13 +30,16 @@ repository root.
   generates an answer per problem, extracts and normalizes the candidate,
   grades it against the ground truth (including SymPy-based equality checks),
   and logs each result to JSONL with progress/ETA reporting.
+- **Self-consistency** (`src/rmfs/self_consistency.py`) — samples several
+  answers with temperature/top-p sampling and votes for the most frequent
+  extracted answer.
 
 ## Requirements
 
 - Python 3.12 (see `.python-version`)
 - [uv](https://docs.astral.sh/uv/) for dependency management
-- PyTorch (installed transitively via the `reasoning-from-scratch` dependency,
-  pinned in `uv.lock`)
+- PyTorch and matplotlib (installed transitively via the
+  `reasoning-from-scratch` dependency, pinned in `uv.lock`)
 
 ## Setup
 
@@ -47,6 +56,9 @@ Run a chapter script, for example chapter 2:
 ```bash
 uv run python -m rmfs.chapters.ch02
 ```
+
+Chapter 4 additionally opens matplotlib figures for the toy temperature
+and top-p walkthroughs.
 
 The first run downloads the Qwen3 0.6B base model and tokenizer into
 `models/qwen3/` (`models/` is gitignored). The MATH-500 dataset is likewise
@@ -69,9 +81,10 @@ kept in `notebooks/math500-mps.jsonl`.
 │       ├── chapters/       # one runnable script per chapter
 │       ├── data/           # dataset loading (MATH-500)
 │       ├── evaluation/     # answer extraction, grading, MATH-500 eval loop
-│       ├── generation/     # streaming generation (with/without KV cache)
+│       ├── generation/     # streaming generation (greedy, temperature, top-p)
 │       ├── paths.py        # shared filesystem locations
 │       ├── prompts.py      # prompt template
+│       ├── self_consistency.py # majority answer over sampled generations
 │       └── utils.py        # progress/ETA helpers
 ├── pyproject.toml
 └── uv.lock
