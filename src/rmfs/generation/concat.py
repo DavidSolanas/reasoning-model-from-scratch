@@ -45,3 +45,10 @@ def generate_text_stream_concat(
 
     # Concatenate all generated tokens into the full response
     return tokenizer.decode(generated_ids)
+
+
+# Alias under the book's name: chapters 4+ of the book (and the notebooks)
+# call the flexible generation helper `generate_text_stream_concat_flex`;
+# here the plain name is already the flexible version, since the
+# non-flexible variant was folded into it
+generate_text_stream_concat_flex = generate_text_stream_concat

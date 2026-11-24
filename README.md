@@ -24,8 +24,9 @@ repository root.
   score does not worsen.
 - **Generation** (`src/rmfs/generation/`) — streaming text generation
   (with and without KV cache): greedy decoding, temperature and top-p
-  sampling, the prompt-to-text helper that ties them together, plus
-  token/throughput statistics.
+  sampling, the prompt-to-text helper that ties them together (also
+  exported under the book's `generate_text_stream_concat_flex` name),
+  plus token/throughput statistics.
 - **Prompts** (`src/rmfs/prompts.py`) — chat-style instruction template used
   for the MATH-500 evaluation; asks for the final result as `\boxed{ANSWER}`.
 - **Data** (`src/rmfs/data/`) — loads the MATH-500 test set, downloading it

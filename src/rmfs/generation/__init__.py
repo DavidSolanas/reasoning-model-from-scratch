@@ -1,6 +1,9 @@
 """Text generation: decoding strategies and generation statistics."""
 
-from rmfs.generation.concat import generate_text_stream_concat
+from rmfs.generation.concat import (
+    generate_text_stream_concat,
+    generate_text_stream_concat_flex,
+)
 from rmfs.generation.greedy import (
     generate_text_basic_stream,
     generate_text_basic_stream_cache,
@@ -21,6 +24,7 @@ __all__ = [
     "generate_text_basic_stream",
     "generate_text_basic_stream_cache",
     "generate_text_stream_concat",
+    "generate_text_stream_concat_flex",
     "generate_text_temp_stream_cache",
     "generate_text_top_p_stream_cache",
     "scale_logits_by_temperature",
