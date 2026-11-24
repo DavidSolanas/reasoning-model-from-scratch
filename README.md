@@ -17,7 +17,11 @@ repository root.
   answer-grading pipeline and evaluates the model on MATH-500. Chapter 4
   compares greedy answers with and without a chain-of-thought instruction,
   adds temperature and top-p sampling, and aggregates sampled answers via
-  self-consistency voting.
+  self-consistency voting. Chapter 5 scores answers first with a heuristic
+  (boxed answers, brevity) and then by model likelihood (per-token
+  probabilities, average answer log-probability), and improves them with a
+  critique-and-revise self-refinement loop that only accepts revisions the
+  score does not worsen.
 - **Generation** (`src/rmfs/generation/`) — streaming text generation
   (with and without KV cache): greedy decoding, temperature and top-p
   sampling, the prompt-to-text helper that ties them together, plus
@@ -33,6 +37,13 @@ repository root.
 - **Self-consistency** (`src/rmfs/self_consistency.py`) — samples several
   answers with temperature/top-p sampling and votes for the most frequent
   extracted answer.
+- **Scoring** (`src/rmfs/scoring.py`) — reference-free answer scores: a
+  heuristic favoring boxed, short answers, plus model-likelihood scores
+  (next-token probabilities and log-probabilities of a sequence, average
+  answer log-probability).
+- **Self-refinement** (`src/rmfs/self_refinement.py`) — critique-and-revise
+  loop that samples a draft, asks the model for a critique, rewrites the
+  answer, and keeps a revision only when the score does not get worse.
 
 ## Requirements
 
@@ -84,7 +95,9 @@ kept in `notebooks/math500-mps.jsonl`.
 │       ├── generation/     # streaming generation (greedy, temperature, top-p)
 │       ├── paths.py        # shared filesystem locations
 │       ├── prompts.py      # prompt template
+│       ├── scoring.py      # heuristic and likelihood answer scoring
 │       ├── self_consistency.py # majority answer over sampled generations
+│       ├── self_refinement.py  # critique-and-revise refinement loop
 │       └── utils.py        # progress/ETA helpers
 ├── pyproject.toml
 └── uv.lock
